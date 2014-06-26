@@ -32,10 +32,10 @@ class Raspiode:
 			print t
 			time.sleep(0.1)
 
-	def cumulative_poll_and_print(self):
-		cumul = [0] * len(ports)
+	def zerogame(self):
+		cumul = [random.randint(-50, 50) for x in range(len(ports))]
 		while True:
 			gpio_input = [-1 if gpio.input(port) == 0 else 1 for port in ports]
 			cumul = map(operator.add, cumul, gpio_input)
-			print cumul
-			time.sleep(0.1)
+			print "Keep the numbers at zero!" + "/t".join(cumul)
+			time.sleep(0.01)
