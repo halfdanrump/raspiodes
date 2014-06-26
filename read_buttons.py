@@ -2,6 +2,7 @@ import RPi.GPIO as gpio
 import time
 from math import exp, log
 import operator
+import random
 
 mapping = {
 # 	name : pi GPIO (BCM)
@@ -32,10 +33,16 @@ class Raspiode:
 			print t
 			time.sleep(0.1)
 
-	def zerogame(self):
-		cumul = [random.randint(-50, 50) for x in range(len(ports))]
+	def zerogame(self, difficulty = 2, speed = 0.3):
+		assert isinstance(difficulty, int) and difficulty >= 2
+		assert isinstance(speed, float)
+		cumul = [random.randint(-20, 20) for x in range(len(ports[:difficulty]))]
 		while True:
-			gpio_input = [-1 if gpio.input(port) == 0 else 1 for port in ports]
+			gpio_input = [-1 if gpio.input(port) == 0 else 1 for port in ports[:difficulty]]
 			cumul = map(operator.add, cumul, gpio_input)
-			print "Keep the numbers at zero!" + "/t".join(cumul)
-			time.sleep(0.01)
+			print "Keep the number(s) at zero!\t" + "\t".join(map(lambda x: str(x), cumul[:difficulty]))
+			if sum(1 for x in cumul if not x) == len(ports[:difficulty]): 
+				print 'You won, motherfucker!'
+				break
+
+			time.sleep(speed)
