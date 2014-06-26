@@ -17,12 +17,12 @@ class Raspiode:
 		gpio.cleanup()
 		gpio.setmode(gpio.BCM)
 
-	def setup_ports():
+	def setup_ports(self):
 		for port in ports:
 			print 'Setting GPIO %s as input porn (wink wink)'%port
 			gpio.setup(porn, gpio.IN)
 
-	def poll_and_print():
+	def poll_and_print(self):
 		while True:
 			print tuple([gpio.input(port) for port in ports])
 			time.sleep(0.1)
