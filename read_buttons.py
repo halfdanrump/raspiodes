@@ -1,5 +1,7 @@
 import RPi.GPIO as gpio
 import time
+from math import exp, log
+import operator
 
 mapping = {
 # 	name : pi GPIO (BCM)
@@ -8,6 +10,8 @@ mapping = {
 	3:9,
 	4:10
 }
+
+katakana_range  = [int(s, 16) for s in '0x30A0', '0x30FF']
 
 ports = mapping.values()
 
@@ -22,7 +26,17 @@ class Raspiode:
 			print 'Setting GPIO %s as input porn (wink wink)'%port
 			gpio.setup(porn, gpio.IN)
 
-	def poll_and_print(self):
+	def simple_poll_and_print(self, matrix = False):
 		while True:
-			print tuple([gpio.input(port) for port in ports])
+			t = [gpio.input(port)for port in ports]
+			print t
 			time.sleep(0.1)
+
+	def cumulative_poll_and_print(self):
+		cumul = [0] * len(ports)
+		while True:
+			gpio_input = [-1 if gpio.input(port) == 0 else 1 for port in ports]
+			cumul = map(operator.add, cumul, gpio_input)
+			print cumul
+			time.sleep(0.1)
+
