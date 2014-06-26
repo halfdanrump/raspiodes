@@ -35,13 +35,7 @@ class Raspiode:
 	def cumulative_poll_and_print(self):
 		cumul = [0] * len(ports)
 		while True:
-<<<<<<< HEAD
 			gpio_input = [-1 if gpio.input(port) == 0 else 1 for port in ports]
 			cumul = map(operator.add, cumul, gpio_input)
 			print cumul
 			time.sleep(0.1)
-
-=======
-			print tuple([gpio.input(port) for port in ports])
-			time.sleep(0.1)
->>>>>>> f740308ea623e6cabc9e18dfca65e31b26d6e6ee
