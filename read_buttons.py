@@ -33,16 +33,25 @@ class Raspiode:
 			print t
 			time.sleep(0.1)
 
-	def zerogame(self, difficulty = 2, speed = 0.3):
+	def zerogame(self, difficulty = 2, speed = 0.3, game_time = 60):
 		assert isinstance(difficulty, int) and difficulty >= 2
 		assert isinstance(speed, float)
+
 		cumul = [random.randint(-20, 20) for x in range(len(ports[:difficulty]))]
+		start_time = time.time()
+
 		while True:
 			gpio_input = [-1 if gpio.input(port) == 0 else 1 for port in ports[:difficulty]]
 			cumul = map(operator.add, cumul, gpio_input)
-			print "Keep the number(s) at zero!\t" + "\t".join(map(lambda x: str(x), cumul[:difficulty]))
+			elapsed_time = time.time() - start_time
+			remaining_time = game_time - elapsed_time
+
+
+			print "%s Keep the number(s) at zero!\t"%remaining_time + "\t".join(map(lambda x: str(x), cumul[:difficulty]))
 			if sum(1 for x in cumul if not x) == len(ports[:difficulty]): 
 				print 'You won, motherfucker!'
 				break
+
+			if remaining_time <= 0: print 'You lose, motherfucker!'
 
 			time.sleep(speed)
